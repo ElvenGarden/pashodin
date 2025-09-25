@@ -10,50 +10,56 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <h1>Elven Garden — демо-приложение</h1>
-        <p>Открывается прямо с GitHub Pages, без собственного сервера.</p>
-    </header>
+
 
     <main class="container">
         <!-- Основной экран -->
-        <section id="screen-main" class="card" aria-live="polite">
-            <form id="decision-form" class="stack" novalidate>
-                <label for="questions-input" class="field-label">Вопросы</label>
-                <textarea id="questions-input" class="field" rows="8"
-                    placeholder="Введите вопросы, по одному на строку…\nНапример:\n— Принять ли PR #42?\n— Как назвать фичу релиза?\n— Что делать с багом в оплате?\n— Улучшить логирование?\n"></textarea>
-                <p id="questions-hint" class="hint">Каждая строка — отдельный вопрос. Пустые строки игнорируются.</p>
-
-                <label for="people-input" class="field-label">Участники</label>
-                <input id="people-input" class="field" type="text"
-                    placeholder="Имена участников через запятую: Анна, Борис, …" />
-                <p id="people-hint" class="hint">Используйте запятую как разделитель. Дубликаты остаются.</p>
-
-                <div class="actions">
-                    <button id="btn-decide" class="btn btn-primary" type="button">решить вопрос</button>
-                </div>
-
-                <p id="form-status" class="status-line" role="status" aria-live="polite"></p>
-            </form>
-        </section>
-
-        <!-- Экран ответа -->
-        <section id="screen-answer" class="card hidden" aria-live="polite">
-            <h2 class="section-title">Отвечай!</h2>
-            <div class="blessing-image" aria-hidden="true"></div>
-            <p class="hint">Один, сингулярность черной дыры и садовая эльфийка наделяют энергией того, кто смотрит на
-                картинку.</p>
-            <div class="actions">
-                <button id="btn-answered" class="btn" type="button">Отвечен</button>
+        <div class="main-grid outer">
+            <div class="main-illustration">
+                <img src="media/img1.png" alt="Иллюстрация" class="ill-image" />
             </div>
-        </section>
+            <div class="right-pane">
+                <section id="screen-main" class="card" aria-live="polite">
+                    <form id="decision-form" class="stack" novalidate>
+                        <label for="questions-input" class="field-label">Вопросы</label>
+                        <textarea id="questions-input" class="field" rows="8"
+                            placeholder="Какие вопросы требуют благословения Одина, сингулярности черной дыры и садовой эльфийки? Разделяйте их новой строкой."></textarea>
+
+                        <label for="people-input" class="field-label">Участники</label>
+                        <input id="people-input" class="field" type="text" placeholder="Илья, Леша, …" />
+
+                        <div class="actions">
+                            <button id="btn-decide" class="btn btn-primary" type="button">решить вопрос</button>
+                        </div>
+
+                        <p id="form-status" class="status-line" role="status" aria-live="polite"></p>
+                    </form>
+                </section>
+
+                <!-- Экран ответа -->
+                <section id="screen-answer" class="card hidden" aria-live="polite">
+                    <h2 class="section-title">Отвечай!</h2>
+                    <div class="blessing-image" aria-hidden="true"></div>
+                    <p class="hint">Один, сингулярность черной дыры и садовая эльфийка наделяют энергией того, кто
+                        смотрит на
+                        картинку.</p>
+                    <div class="actions">
+                        <button id="btn-answered" class="btn" type="button">Отвечен</button>
+                    </div>
+                </section>
+            </div>
+        </div>
 
         <!-- Модалка назначения -->
         <section id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div class="modal-backdrop" data-close></div>
+            <div class="modal-backdrop" data-close>
+                <canvas id="runes-canvas"></canvas>
+            </div>
             <div class="modal-content">
-                <h2 id="modal-title" class="section-title">Назначение</h2>
-                <p id="assignment-text" class="assignment-text"></p>
+                <h2 id="modal-title" class="section-title"></h2>
+                <p id="blessing-text" class="assignment-text"></p>
+                <p id="question-emphasis" class="question-emphasis"></p>
+                <p id="readiness-text" class="assignment-text"></p>
                 <p id="selfcare-text" class="selfcare-text" aria-live="polite"></p>
                 <div class="actions">
                     <button id="btn-accept" class="btn btn-primary" type="button">Отвечу!</button>
@@ -63,11 +69,7 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <p>
-            Исходники в репозитории. Развёртывание через GitHub Pages.
-        </p>
-    </footer>
+
 
     <script src="script.js"></script>
 </body>

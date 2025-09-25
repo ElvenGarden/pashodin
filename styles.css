@@ -44,18 +44,39 @@ body {
 }
 
 .container {
-    max-width: 720px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 24px 16px 48px;
+    padding: 32px 20px 64px;
 }
 
 .card {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
-    padding: 24px;
+    padding: 32px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(6px);
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+.main-illustration {
+    align-self: start;
+}
+
+.ill-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .hidden {
@@ -64,21 +85,22 @@ body {
 
 .stack {
     display: grid;
-    gap: 8px;
+    gap: 12px;
 }
 
 .field-label {
-    font-size: 14px;
+    font-size: 16px;
     color: var(--muted);
 }
 
 .field {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
+    padding: 14px 16px;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(0, 0, 0, 0.25);
     color: var(--text);
+    font-size: 18px;
 }
 
 .field::placeholder {
@@ -88,7 +110,7 @@ body {
 .hint {
     margin: 0 0 8px 0;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .quote-block {
@@ -108,7 +130,7 @@ body {
 
 .actions {
     display: flex;
-    gap: 12px;
+    gap: 16px;
 }
 
 .btn {
@@ -116,10 +138,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: linear-gradient(180deg, rgba(34, 211, 238, 0.2), rgba(8, 145, 178, 0.2));
     color: var(--text);
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 14px 18px;
+    border-radius: 12px;
     cursor: pointer;
     transition: transform 0.08s ease, background 0.2s ease, border-color 0.2s ease;
+    font-size: 16px;
 }
 
 .btn:hover {
@@ -143,7 +166,7 @@ body {
 
 .status-line {
     margin-top: 12px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--muted);
 }
 
@@ -165,7 +188,18 @@ body {
 .modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.78);
+    overflow: hidden;
+}
+
+.modal-backdrop #runes-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    opacity: 0.55;
 }
 
 .modal-content {
@@ -173,16 +207,23 @@ body {
     z-index: 1;
     max-width: 720px;
     margin: 16px;
-    padding: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    padding: 28px;
+    background: var(--panel);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
 .assignment-text {
     font-size: 18px;
     line-height: 1.6;
+}
+
+.question-emphasis {
+    font-size: 28px;
+    line-height: 1.5;
+    margin: 12px 0;
+    font-weight: 600;
 }
 
 .selfcare-text {
@@ -205,4 +246,10 @@ body {
 
 .site-footer {
     color: var(--muted);
+}
+
+@media (max-width: 800px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
 }
