@@ -20,6 +20,8 @@ const acceptButton = document.getElementById('btn-accept');
 const declineButton = document.getElementById('btn-decline');
 const runesCanvas = document.getElementById('runes-canvas');
 const quoteLine = document.getElementById('quote-line');
+const assignmentActions = document.getElementById('assignment-actions');
+const blackhole = document.getElementById('blackhole');
 
 // State
 const STORAGE_KEYS = {
@@ -97,6 +99,13 @@ function hideModal() {
     modal.classList.add('hidden');
     selfcareText.textContent = '';
     stopRunesAnimation();
+    // Сбрасываем состояние selfcare/кнопок/черной дыры
+    if (assignmentActions) assignmentActions.classList.remove('hidden');
+    if (blackhole) blackhole.classList.add('hidden');
+    if (modalTitle) modalTitle.classList.remove('hidden');
+    if (blessingTextEl) blessingTextEl.classList.remove('hidden');
+    if (questionEmphasisEl) questionEmphasisEl.classList.remove('hidden');
+    if (readinessTextEl) readinessTextEl.classList.remove('hidden');
 }
 
 function showAnswerScreen() {
@@ -167,23 +176,29 @@ function onAccept() {
 }
 
 function onDecline() {
-    // «Нет!» — показываем фразу про заботу и выкидываем новую пару
-    selfcareText.textContent = 'спасибо, что позаботился о себе';
+    // «Нет!» — показываем единственную надпись, прячем кнопки, а затем схлопываемся в "черную дыру"
+    if (assignmentActions) assignmentActions.classList.add('hidden');
+    selfcareText.textContent = 'Спасибо, что позаботился о нас всех.';
+    if (modalTitle) modalTitle.classList.add('hidden');
+    if (blessingTextEl) blessingTextEl.classList.add('hidden');
+    if (questionEmphasisEl) questionEmphasisEl.classList.add('hidden');
+    if (readinessTextEl) readinessTextEl.classList.add('hidden');
 
-    const questions = parseQuestions(questionsInput.value);
-    const people = parsePeople(peopleInput.value);
-    if (questions.length === 0 || people.length === 0) {
-        // если внезапно список пуст — закрываем
-        hideModal();
-        return;
-    }
-    currentQuestion = pickRandom(questions);
-    currentPerson = pickRandom(people);
-    const { blessing, readiness } = buildContent(currentPerson, currentQuestion);
-    modalTitle.textContent = currentPerson;
-    blessingTextEl.textContent = blessing;
-    questionEmphasisEl.textContent = currentQuestion;
-    readinessTextEl.textContent = readiness;
+    // Через 2 секунды запускаем анимацию схлопывания и закрываем модалку
+    setTimeout(() => {
+        if (blackhole) {
+            blackhole.classList.remove('hidden');
+        }
+        const content = modal.querySelector('.modal-content');
+        if (content) {
+            content.classList.add('collapse-to-blackhole');
+        }
+        setTimeout(() => {
+            hideModal();
+            // Восстанавливаем контент для следующего показа
+            if (content) content.classList.remove('collapse-to-blackhole');
+        }, 850);
+    }, 2000);
 }
 
 function onAnswered() {

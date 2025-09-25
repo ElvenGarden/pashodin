@@ -59,6 +59,7 @@
         <section id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-backdrop" data-close>
                 <canvas id="runes-canvas"></canvas>
+                <div id="blackhole" class="blackhole hidden"></div>
             </div>
             <div class="modal-content">
                 <div id="assignment-content">
@@ -67,7 +68,7 @@
                     <p id="question-emphasis" class="question-emphasis"></p>
                     <p id="readiness-text" class="assignment-text"></p>
                     <p id="selfcare-text" class="selfcare-text" aria-live="polite"></p>
-                    <div class="actions">
+                    <div id="assignment-actions" class="actions">
                         <button id="btn-accept" class="btn btn-primary" type="button">Отвечу!</button>
                         <button id="btn-decline" class="btn" type="button">Нет!</button>
                     </div>
