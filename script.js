@@ -131,7 +131,7 @@ function showMainScreen() {
 }
 
 function buildContent(person, question) {
-    const blessing = `${person}, ты благословлен Одином, сингулярностью черной дыры и садовой эльфийкой на решение вопроса:`;
+    const blessing = `${person}, ты благословлен Одином, Сингулярностью Черной Дыры и Садовой Эльфийкой на решение вопроса:`;
     const readiness = `Ты готов ответить этот вопрос здесь и сейчас? Почет и хула за последствия решения будут на тебе.`;
     return { blessing, readiness };
 }
