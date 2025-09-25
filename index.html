@@ -44,11 +44,16 @@
                         смотрит на
                         картинку.</p>
                     <div class="actions">
-                        <button id="btn-answered" class="btn" type="button">Отвечен</button>
+                        <button id="btn-answered" class="btn" type="button">Ответил</button>
                     </div>
                 </section>
             </div>
         </div>
+
+        <!-- Ротатор цитат -->
+        <section id="quotes-rotator" class="quotes-rotator" aria-live="polite">
+            <p id="quote-line" class="quote-line"></p>
+        </section>
 
         <!-- Модалка назначения -->
         <section id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -56,14 +61,24 @@
                 <canvas id="runes-canvas"></canvas>
             </div>
             <div class="modal-content">
-                <h2 id="modal-title" class="section-title"></h2>
-                <p id="blessing-text" class="assignment-text"></p>
-                <p id="question-emphasis" class="question-emphasis"></p>
-                <p id="readiness-text" class="assignment-text"></p>
-                <p id="selfcare-text" class="selfcare-text" aria-live="polite"></p>
-                <div class="actions">
-                    <button id="btn-accept" class="btn btn-primary" type="button">Отвечу!</button>
-                    <button id="btn-decline" class="btn" type="button">Нет!</button>
+                <div id="assignment-content">
+                    <h2 id="modal-title" class="section-title"></h2>
+                    <p id="blessing-text" class="assignment-text"></p>
+                    <p id="question-emphasis" class="question-emphasis"></p>
+                    <p id="readiness-text" class="assignment-text"></p>
+                    <p id="selfcare-text" class="selfcare-text" aria-live="polite"></p>
+                    <div class="actions">
+                        <button id="btn-accept" class="btn btn-primary" type="button">Отвечу!</button>
+                        <button id="btn-decline" class="btn" type="button">Нет!</button>
+                    </div>
+                </div>
+                <div id="answer-content" class="hidden">
+                    <h2 class="section-title">Отвечай!</h2>
+                    <video id="answer-video" class="answer-video" src="media/video1.mp4" autoplay muted loop playsinline
+                        controls></video>
+                    <div class="actions">
+                        <button id="btn-answered" class="btn" type="button">Ответил</button>
+                    </div>
                 </div>
             </div>
         </section>

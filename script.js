@@ -8,7 +8,7 @@ const formStatus = document.getElementById('form-status');
 
 const screenMain = document.getElementById('screen-main');
 const screenAnswer = document.getElementById('screen-answer');
-const answeredButton = document.getElementById('btn-answered');
+// answeredButton будет внутри модалки теперь
 
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modal-title');
@@ -19,6 +19,7 @@ const selfcareText = document.getElementById('selfcare-text');
 const acceptButton = document.getElementById('btn-accept');
 const declineButton = document.getElementById('btn-decline');
 const runesCanvas = document.getElementById('runes-canvas');
+const quoteLine = document.getElementById('quote-line');
 
 // State
 const STORAGE_KEYS = {
@@ -99,13 +100,25 @@ function hideModal() {
 }
 
 function showAnswerScreen() {
-    screenMain.classList.add('hidden');
-    screenAnswer.classList.remove('hidden');
+    // Переключаем содержимое модалки на видео
+    const assignmentContent = document.getElementById('assignment-content');
+    const answerContent = document.getElementById('answer-content');
+    if (assignmentContent && answerContent) {
+        assignmentContent.classList.add('hidden');
+        answerContent.classList.remove('hidden');
+    }
+    showModal();
 }
 
 function showMainScreen() {
-    screenAnswer.classList.add('hidden');
-    screenMain.classList.remove('hidden');
+    // Возвращаемся к основному экрану (модалка скрывается, в модалке показываем назначение)
+    const assignmentContent = document.getElementById('assignment-content');
+    const answerContent = document.getElementById('answer-content');
+    if (assignmentContent && answerContent) {
+        answerContent.classList.add('hidden');
+        assignmentContent.classList.remove('hidden');
+    }
+    hideModal();
 }
 
 function buildContent(person, question) {
@@ -182,7 +195,13 @@ function attachEventListeners() {
     decideButton.addEventListener('click', onDecideClick);
     acceptButton.addEventListener('click', onAccept);
     declineButton.addEventListener('click', onDecline);
-    answeredButton.addEventListener('click', onAnswered);
+    // кнопка ответа внутри модалки
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.id === 'btn-answered') {
+            onAnswered();
+        }
+    });
 
     // Закрытие по клику на подложку
     modal.addEventListener('click', (e) => {
@@ -210,6 +229,7 @@ function init() {
     loadFromStorage();
     attachEventListeners();
     updateDecideButtonState();
+    initQuotesRotator();
 }
 
 window.addEventListener('DOMContentLoaded', init);
@@ -322,6 +342,37 @@ function initializeSeededRng() {
     const seedString = 'Odin, singularity, and garden elven ' + new Date().toISOString();
     const seedGen = xmur3(seedString);
     rng = sfc32(seedGen(), seedGen(), seedGen(), seedGen());
+}
+
+// Quotes rotator
+const QUOTES = [
+    '«Хороший план, энергично исполненный сейчас, лучше идеального плана на следующей неделе» — Джордж С. Паттон',
+    '«Правильное решение, принятое с опозданием, — ошибка» — Ли Якокка',
+    '«Все не так серьезно» — Егор'
+];
+let currentQuoteIndex = -1;
+let quotesTimerId = null;
+const QUOTE_FADE_MS = 600;
+
+function showNextQuote() {
+    if (!quoteLine) return;
+    // fade-out current
+    quoteLine.classList.remove('show');
+    setTimeout(() => {
+        currentQuoteIndex = (currentQuoteIndex + 1) % QUOTES.length;
+        quoteLine.textContent = QUOTES[currentQuoteIndex];
+        quoteLine.classList.add('show');
+    }, QUOTE_FADE_MS);
+}
+
+function initQuotesRotator() {
+    // immediate first show with fade-in
+    currentQuoteIndex = (currentQuoteIndex + 1) % QUOTES.length;
+    if (quoteLine) {
+        quoteLine.textContent = QUOTES[currentQuoteIndex];
+        requestAnimationFrame(() => quoteLine.classList.add('show'));
+    }
+    quotesTimerId = setInterval(showNextQuote, 10_000);
 }
 
 

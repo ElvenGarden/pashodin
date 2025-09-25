@@ -214,6 +214,14 @@ body {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
+.answer-video {
+    width: 100%;
+    max-height: 60vh;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #000;
+}
+
 .assignment-text {
     font-size: 18px;
     line-height: 1.6;
@@ -252,4 +260,30 @@ body {
     .main-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Quotes rotator */
+.quotes-rotator {
+    position: relative;
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    overflow: hidden;
+}
+
+.quote-line {
+    margin: 0;
+    color: var(--text);
+    font-size: 18px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms ease, transform 600ms ease;
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.25);
+}
+
+.quote-line.show {
+    opacity: 1;
+    transform: translateY(0);
 }
