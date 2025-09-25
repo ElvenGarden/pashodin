@@ -399,12 +399,12 @@ body {
 
 .quote-line {
     margin: 0;
-    color: var(--text);
+    color: var(--muted);
     font-size: 18px;
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 600ms ease, transform 600ms ease;
-    text-shadow: 0 0 8px rgba(34, 211, 238, 0.25);
+    text-shadow: none;
 }
 
 .quote-line.show {
