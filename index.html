@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Демо: статическое веб‑приложение на GitHub Pages</title>
+    <meta name="description" content="Мини-приложение без сервера: динамические цитаты через публичный API.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <h1>Elven Garden — демо-приложение</h1>
+        <p>Открывается прямо с GitHub Pages, без собственного сервера.</p>
+    </header>
+
+    <main class="container">
+        <section class="card" aria-live="polite">
+            <div class="quote-block">
+                <p id="quote-text" class="quote-text">Загружаю цитату…</p>
+                <p id="quote-author" class="quote-author"></p>
+            </div>
+            <div class="actions">
+                <button id="btn-refresh" class="btn">Новая цитата</button>
+            </div>
+            <p id="status-line" class="status-line" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>
+            Исходники в репозитории. Развёртывание через GitHub Pages.
+        </p>
+    </footer>
+
+    <script src="script.js" type="module"></script>
+</body>
+
+</html>
