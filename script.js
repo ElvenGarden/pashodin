@@ -45,10 +45,21 @@ function pickRandom(array) {
     return array[idx];
 }
 
+function computeValidationMessage() {
+    const questionsCount = parseQuestions(questionsInput.value).length;
+    const peopleCount = parsePeople(peopleInput.value).length;
+    if (questionsCount === 0 && peopleCount === 0) return 'Добавьте вопросы и имена участников.';
+    if (questionsCount === 0) return 'Добавьте хотя бы один вопрос.';
+    if (peopleCount === 0) return 'Добавьте хотя бы одно имя.';
+    return '';
+}
+
 function updateDecideButtonState() {
     const hasQuestions = parseQuestions(questionsInput.value).length > 0;
     const hasPeople = parsePeople(peopleInput.value).length > 0;
-    decideButton.disabled = !(hasQuestions && hasPeople);
+    const enabled = hasQuestions && hasPeople;
+    decideButton.disabled = !enabled;
+    formStatus.textContent = enabled ? '' : computeValidationMessage();
 }
 
 function saveToStorage() {
