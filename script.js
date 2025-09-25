@@ -186,17 +186,19 @@ function onDecline() {
 
     // Через 2 секунды запускаем анимацию схлопывания и закрываем модалку
     setTimeout(() => {
-        if (blackhole) {
-            blackhole.classList.remove('hidden');
-        }
+        // фон: затухают руны и проявляется черная дыра
+        if (runesCanvas) runesCanvas.style.opacity = '0.5';
+        if (blackhole) { blackhole.classList.remove('hidden'); blackhole.classList.add('active'); }
         const content = modal.querySelector('.modal-content');
         if (content) {
-            content.classList.add('collapse-to-blackhole');
+            content.classList.add('tv-off-collapse');
         }
         setTimeout(() => {
             hideModal();
             // Восстанавливаем контент для следующего показа
-            if (content) content.classList.remove('collapse-to-blackhole');
+            if (content) content.classList.remove('tv-off-collapse');
+            if (runesCanvas) runesCanvas.style.opacity = '';
+            if (blackhole) blackhole.classList.remove('active');
         }, 850);
     }, 2000);
 }
