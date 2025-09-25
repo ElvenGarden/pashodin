@@ -1,66 +1,188 @@
 'use strict';
 
-const quoteTextElement = document.getElementById('quote-text');
-const quoteAuthorElement = document.getElementById('quote-author');
-const statusLineElement = document.getElementById('status-line');
-const refreshButtonElement = document.getElementById('btn-refresh');
+// DOM
+const questionsInput = document.getElementById('questions-input');
+const peopleInput = document.getElementById('people-input');
+const decideButton = document.getElementById('btn-decide');
+const formStatus = document.getElementById('form-status');
 
-const localFallbackQuotes = [
-    { content: 'Где тонко, там и рвется.', author: 'Народная мудрость' },
-    { content: 'Всякая мысль — зерно будущего поступка.', author: 'Лев Толстой' },
-    { content: 'Счастье — это когда тебя понимают.', author: 'Конфуций' },
-    { content: 'Тишина — лучший ответ на бессмыслицу.', author: 'Федор Достоевский' },
-    { content: 'Делай, что можешь, с тем, что имеешь, там, где ты есть.', author: 'Теодор Рузвельт' }
-];
+const screenMain = document.getElementById('screen-main');
+const screenAnswer = document.getElementById('screen-answer');
+const answeredButton = document.getElementById('btn-answered');
 
-function chooseRandomFallbackQuote() {
-    const index = Math.floor(Math.random() * localFallbackQuotes.length);
-    return localFallbackQuotes[index];
+const modal = document.getElementById('modal');
+const assignmentText = document.getElementById('assignment-text');
+const selfcareText = document.getElementById('selfcare-text');
+const acceptButton = document.getElementById('btn-accept');
+const declineButton = document.getElementById('btn-decline');
+
+// State
+const STORAGE_KEYS = {
+    questions: 'eg.questions.v1',
+    people: 'eg.people.v1',
+};
+
+let currentQuestion = null;
+let currentPerson = null;
+
+// Utils
+function parseQuestions(text) {
+    return text
+        .split(/\r?\n/g)
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
 }
 
-async function fetchQuoteFromPublicApi(signal) {
-    // Публичный API с поддержкой CORS: https://api.quotable.io
-    const response = await fetch('https://api.quotable.io/random', { signal });
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-    }
-    const data = await response.json();
-    return { content: data.content, author: data.author || 'Неизвестный автор' };
+function parsePeople(text) {
+    return text
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
 }
 
-async function loadQuote() {
-    statusLineElement.textContent = 'Загружаю…';
+function pickRandom(array) {
+    const idx = Math.floor(Math.random() * array.length);
+    return array[idx];
+}
 
-    const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), 10_000);
+function updateDecideButtonState() {
+    const hasQuestions = parseQuestions(questionsInput.value).length > 0;
+    const hasPeople = parsePeople(peopleInput.value).length > 0;
+    decideButton.disabled = !(hasQuestions && hasPeople);
+}
 
+function saveToStorage() {
     try {
-        const quote = await fetchQuoteFromPublicApi(abortController.signal);
-        applyQuoteToUi(quote);
-        statusLineElement.textContent = 'Получено с публичного API';
-    } catch (error) {
-        const fallback = chooseRandomFallbackQuote();
-        applyQuoteToUi(fallback);
-        statusLineElement.textContent = 'Показан локальный запасной вариант (офлайн/ограничения CORS/сеть)';
-        // В консоль отправим подробности для дебага
-        console.warn('[quote-fallback]', error);
-    } finally {
-        clearTimeout(timeoutId);
+        localStorage.setItem(STORAGE_KEYS.questions, questionsInput.value);
+        localStorage.setItem(STORAGE_KEYS.people, peopleInput.value);
+    } catch (e) {
+        // ignore storage errors
     }
 }
 
-function applyQuoteToUi(quote) {
-    quoteTextElement.textContent = `“${quote.content}”`;
-    quoteAuthorElement.textContent = `— ${quote.author}`;
+function loadFromStorage() {
+    try {
+        const q = localStorage.getItem(STORAGE_KEYS.questions);
+        const p = localStorage.getItem(STORAGE_KEYS.people);
+        if (typeof q === 'string') questionsInput.value = q;
+        if (typeof p === 'string') peopleInput.value = p;
+    } catch (e) {
+        // ignore
+    }
 }
 
-refreshButtonElement.addEventListener('click', () => {
-    void loadQuote();
-});
+function showModal() {
+    modal.classList.remove('hidden');
+}
 
-// Первая загрузка при входе на страницу
-window.addEventListener('DOMContentLoaded', () => {
-    void loadQuote();
-});
+function hideModal() {
+    modal.classList.add('hidden');
+    selfcareText.textContent = '';
+}
+
+function showAnswerScreen() {
+    screenMain.classList.add('hidden');
+    screenAnswer.classList.remove('hidden');
+}
+
+function showMainScreen() {
+    screenAnswer.classList.add('hidden');
+    screenMain.classList.remove('hidden');
+}
+
+function buildAssignmentText(person, question) {
+    return `${person}, ты благословлен Одином, сингулярностью черной дыры и садовой эльфийкой на решение вопроса ${question}! Ты готов ответить этот вопрос здесь и сейчас? Почет и хула за последствия решения будут на тебе.`;
+}
+
+function removeQuestionFromTextarea(question) {
+    const lines = questionsInput.value.split(/\r?\n/g);
+    const idx = lines.findIndex(line => line.trim() === question.trim());
+    if (idx >= 0) {
+        lines.splice(idx, 1);
+        questionsInput.value = lines.join('\n');
+    }
+}
+
+function onDecideClick() {
+    const questions = parseQuestions(questionsInput.value);
+    const people = parsePeople(peopleInput.value);
+
+    if (questions.length === 0 || people.length === 0) {
+        formStatus.textContent = 'Нужно добавить хотя бы один вопрос и одно имя.';
+        updateDecideButtonState();
+        return;
+    }
+
+    currentQuestion = pickRandom(questions);
+    currentPerson = pickRandom(people);
+    assignmentText.textContent = buildAssignmentText(currentPerson, currentQuestion);
+    selfcareText.textContent = '';
+    showModal();
+}
+
+function onAccept() {
+    // «Отвечу!» — переходим на экран ответа и удаляем вопрос из списка
+    removeQuestionFromTextarea(currentQuestion);
+    saveToStorage();
+    updateDecideButtonState();
+    hideModal();
+    showAnswerScreen();
+}
+
+function onDecline() {
+    // «Нет!» — показываем фразу про заботу и выкидываем новую пару
+    selfcareText.textContent = 'спасибо, что позаботился о себе';
+
+    const questions = parseQuestions(questionsInput.value);
+    const people = parsePeople(peopleInput.value);
+    if (questions.length === 0 || people.length === 0) {
+        // если внезапно список пуст — закрываем
+        hideModal();
+        return;
+    }
+    currentQuestion = pickRandom(questions);
+    currentPerson = pickRandom(people);
+    assignmentText.textContent = buildAssignmentText(currentPerson, currentQuestion);
+}
+
+function onAnswered() {
+    // Возврат к основному экрану
+    showMainScreen();
+}
+
+function attachEventListeners() {
+    decideButton.addEventListener('click', onDecideClick);
+    acceptButton.addEventListener('click', onAccept);
+    declineButton.addEventListener('click', onDecline);
+    answeredButton.addEventListener('click', onAnswered);
+
+    // Закрытие по клику на подложку
+    modal.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.hasAttribute && target.hasAttribute('data-close')) {
+            hideModal();
+        }
+    });
+
+    // Ввод и сохранение
+    questionsInput.addEventListener('input', () => {
+        saveToStorage();
+        updateDecideButtonState();
+        formStatus.textContent = '';
+    });
+    peopleInput.addEventListener('input', () => {
+        saveToStorage();
+        updateDecideButtonState();
+        formStatus.textContent = '';
+    });
+}
+
+function init() {
+    loadFromStorage();
+    attachEventListeners();
+    updateDecideButtonState();
+}
+
+window.addEventListener('DOMContentLoaded', init);
 
 
