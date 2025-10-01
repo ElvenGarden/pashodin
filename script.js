@@ -2,7 +2,7 @@
 
 // DOM
 const questionsInput = document.getElementById('questions-input');
-const peopleInput = document.getElementById('people-input');
+const peopleInput = document.getElementById('people-input'); // now textarea with autosize
 const decideButton = document.getElementById('btn-decide');
 const formStatus = document.getElementById('form-status');
 
@@ -142,6 +142,7 @@ function removeQuestionFromTextarea(question) {
     if (idx >= 0) {
         lines.splice(idx, 1);
         questionsInput.value = lines.join('\n');
+        autosizeTextarea(questionsInput);
     }
 }
 
@@ -247,6 +248,7 @@ function init() {
     attachEventListeners();
     updateDecideButtonState();
     initQuotesRotator();
+    initAutosize();
 }
 
 window.addEventListener('DOMContentLoaded', init);
@@ -390,6 +392,19 @@ function initQuotesRotator() {
         requestAnimationFrame(() => quoteLine.classList.add('show'));
     }
     quotesTimerId = setInterval(showNextQuote, 10_000);
+}
+
+function autosizeTextarea(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
+}
+
+function initAutosize() {
+    autosizeTextarea(peopleInput);
+    autosizeTextarea(questionsInput);
+    peopleInput.addEventListener('input', () => autosizeTextarea(peopleInput));
+    questionsInput.addEventListener('input', () => autosizeTextarea(questionsInput));
 }
 
 

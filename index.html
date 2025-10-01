@@ -22,11 +22,11 @@
                 <section id="screen-main" class="card" aria-live="polite">
                     <form id="decision-form" class="stack" novalidate>
                         <label for="questions-input" class="field-label">Вопросы</label>
-                        <textarea id="questions-input" class="field" rows="8"
+                        <textarea id="questions-input" class="field field--autosize" rows="8"
                             placeholder="Какие вопросы требуют решения?&#10;&#10;Что нужно сделать? (императив)&#10;&#10;Разделяйте их новой строкой. Пример:&#10;&#10;— Что делать, есть ли у нас консенсус?&#10;— Сделай, чтобы было свободно и интересно."></textarea>
 
                         <label for="people-input" class="field-label">Участники</label>
-                        <input id="people-input" class="field" type="text" placeholder="Илья, Леша, …" />
+                        <textarea id="people-input" class="field field--autosize" rows="1" placeholder="Илья, Леша, …"></textarea>
 
                         <div class="actions">
                             <button id="btn-decide" class="btn btn-primary" type="button">решить вопрос</button>
